@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:io' show Platform;
 
+//.mergewith (refer)[to add somting to style constant]
+
 class PriceScreen extends StatefulWidget {
   var data;
   PriceScreen({this.data});
@@ -25,10 +27,10 @@ class _PriceScreenState extends State<PriceScreen> {
     widget.data != null ? rate = widget.data['rate'] : rate = 0.0;
   }
 
-  void updateUi(String? real) async {
+  void updateUi() async {
     print('=====================UpdateUi====================');
-    print('real value: $real');
-    updatedData = await Networking().getCurrencyData(real, digitalCurrency);
+    updatedData =
+        await Networking().getCurrencyData(digitalCurrency, realCurrency);
     print('updateData value: $updatedData');
     setState(() {
       updatedData != null ? rate = updatedData['rate'] : rate = 0.0;
@@ -46,6 +48,7 @@ class _PriceScreenState extends State<PriceScreen> {
     }
     return DropdownButton<String>(
       items: newCurrencyList,
+      dropdownColor: Colors.blue,
       value: realCurrency,
       onChanged: (String? newValue) {
         setState(() {
@@ -53,7 +56,7 @@ class _PriceScreenState extends State<PriceScreen> {
               '==============================Inside set state==============================');
           realCurrency = newValue!;
           print('realCurrency $realCurrency');
-          updateUi(realCurrency);
+          updateUi();
         });
       },
     );
@@ -68,6 +71,7 @@ class _PriceScreenState extends State<PriceScreen> {
       ));
     }
     return DropdownButton<String>(
+      dropdownColor: Colors.blue,
       items: newCurrencyListDigital,
       value: digitalCurrency,
       onChanged: (String? newValue) {
@@ -76,7 +80,7 @@ class _PriceScreenState extends State<PriceScreen> {
               '==============================Inside set state==============================');
           digitalCurrency = newValue!;
           print('realCurrency $digitalCurrency');
-          updateUi(digitalCurrency);
+          updateUi();
         });
       },
     );
@@ -91,7 +95,7 @@ class _PriceScreenState extends State<PriceScreen> {
       itemExtent: 32.0,
       onSelectedItemChanged: (SelectedIndex) {
         realCurrency = SelectedIndex.toString();
-        updateUi(realCurrency);
+        updateUi();
       },
       children: newCurrencyList,
     );
@@ -106,7 +110,7 @@ class _PriceScreenState extends State<PriceScreen> {
       itemExtent: 32.0,
       onSelectedItemChanged: (SelectedIndex) {
         digitalCurrency = SelectedIndex.toString();
-        updateUi(digitalCurrency);
+        updateUi();
       },
       children: newCurrencyListDigital,
     );
@@ -154,8 +158,8 @@ class _PriceScreenState extends State<PriceScreen> {
                 padding: EdgeInsets.only(bottom: 30.0),
                 color: Colors.lightBlue,
                 child: Platform.isIOS
-                    ? getIosPicker()
-                    : getAndroidDropDownButton(),
+                    ? getIosPickerForDigital()
+                    : getAndroidDropDownButtonForDigital(),
               ),
               Container(
                 height: 150.0,
@@ -164,8 +168,8 @@ class _PriceScreenState extends State<PriceScreen> {
                 padding: EdgeInsets.only(bottom: 30.0),
                 color: Colors.lightBlue,
                 child: Platform.isIOS
-                    ? getIosPickerForDigital()
-                    : getAndroidDropDownButtonForDigital(),
+                    ? getIosPicker()
+                    : getAndroidDropDownButton(),
               )
             ],
           ),
